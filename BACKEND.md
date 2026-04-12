@@ -168,6 +168,8 @@ On first launch, a default user is created:
 |---|---|---|
 | `student` | `password123` | 0 |
 
+> ⚠️ **Security Warning:** This default account uses a well-known password. In a production deployment, you **must** remove this account or change its password immediately after first launch.
+
 ### Exported Functions
 
 | Function | Signature | Description |
