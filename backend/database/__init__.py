@@ -9,6 +9,12 @@ except Exception:
     CulturalStamp = None
     LearningSession = None
 
+try:
+    from database.handwriting_models import Letter, HandwritingAttempt
+except Exception:
+    Letter = None
+    HandwritingAttempt = None
+
 __all__ = [
     "Base",
     "engine",

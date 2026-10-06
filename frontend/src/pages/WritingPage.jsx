@@ -11,7 +11,7 @@ import { voiceService } from '../services/voiceService';
 import { triggerCelebration } from '../components/common/Confetti';
 import { SpeechBubble } from '../components/common/SpeechBubble';
 import { HandwritingCanvas } from '../components/writing/HandwritingCanvas';
-import { StrokeAnimationModal } from '../components/writing/StrokeAnimationModal';
+
 import { CurriculumBrowser } from '../components/writing/CurriculumBrowser';
 
 export const WritingPage = () => {
@@ -21,7 +21,7 @@ export const WritingPage = () => {
   const [curriculum, setCurriculum] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [activeLevel, setActiveLevel] = useState(1);
-  const [mode, setMode] = useState('trace'); // 'trace', 'guided', 'free', 'camera'
+  const [mode, setMode] = useState('guided'); // 'guided', 'free', 'camera'
   const [loadingCurriculum, setLoadingCurriculum] = useState(true);
 
   // Attempt tracking
@@ -31,7 +31,7 @@ export const WritingPage = () => {
   // Evaluation & Modal state
   const [evaluating, setEvaluating] = useState(false);
   const [result, setResult] = useState(null);
-  const [showAnimationModal, setShowAnimationModal] = useState(false);
+
 
   // Camera state
   const [cameraActive, setCameraActive] = useState(false);
@@ -256,15 +256,6 @@ export const WritingPage = () => {
         <div className="flex bg-amber-100/80 p-1 rounded-2xl border border-amber-300 self-start sm:self-auto shadow-sm">
           <button
             type="button"
-            onClick={() => { setMode('trace'); setResult(null); }}
-            className={`px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all ${
-              mode === 'trace' ? 'bg-white text-amber-900 shadow-sm' : 'text-stone-600'
-            }`}
-          >
-            ✏️ Trace Mode
-          </button>
-          <button
-            type="button"
             onClick={() => { setMode('guided'); setResult(null); }}
             className={`px-3 py-1.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all ${
               mode === 'guided' ? 'bg-white text-amber-900 shadow-sm' : 'text-stone-600'
@@ -332,16 +323,7 @@ export const WritingPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setShowAnimationModal(true)}
-              className="py-2.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow-sm flex items-center gap-1.5 transition-all"
-            >
-              <Eye className="w-4 h-4" />
-              <span>Show Me How Step-by-Step</span>
-            </button>
-          </div>
+
         </div>
       )}
 
@@ -408,7 +390,6 @@ export const WritingPage = () => {
                 targetItem={selectedItem}
                 mode={mode}
                 onEvaluate={handleEvaluateCanvas}
-                onShowMe={() => setShowAnimationModal(true)}
                 evaluating={evaluating}
               />
             )}
@@ -573,13 +554,7 @@ export const WritingPage = () => {
               </button>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowAnimationModal(true)}
-                  className="py-2 px-3 rounded-xl bg-white border border-amber-300 text-amber-900 font-bold text-xs hover:bg-amber-50"
-                >
-                  Show Me
-                </button>
+
                 <button
                   type="button"
                   onClick={() => setResult(null)}
@@ -593,13 +568,7 @@ export const WritingPage = () => {
         </div>
       </div>
 
-      {/* Step-by-Step Animated Show Me Modal */}
-      {showAnimationModal && (
-        <StrokeAnimationModal
-          targetItem={selectedItem}
-          onClose={() => setShowAnimationModal(false)}
-        />
-      )}
+
     </div>
   );
 };

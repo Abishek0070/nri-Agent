@@ -5,7 +5,7 @@ import { Home, Edit3, Mic, Sparkles, Award } from 'lucide-react';
 export const BottomNav = () => {
   const navItems = [
     { to: '/', label: 'Home', icon: Home },
-    { to: '/writing', label: 'Writing', icon: Edit3 },
+
     { to: '/speaking', label: 'Speaking', icon: Mic },
     { to: '/culture', label: 'Culture', icon: Sparkles },
     { to: '/progress', label: 'Passport', icon: Award },

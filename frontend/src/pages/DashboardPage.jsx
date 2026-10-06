@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Edit3, Mic, Sparkles, Star, Flame, Award, ArrowRight, BookOpen, Compass, ChevronRight } from 'lucide-react';
+import { Edit3, Mic, Sparkles, Star, Flame, Award, ArrowRight, BookOpen, Compass, ChevronRight, Swords } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { userService } from '../services/userService';
@@ -35,20 +35,21 @@ export const DashboardPage = () => {
   const badgesCount = profile?.badges_count || profile?.stamps?.length || 0;
 
   const modules = [
+
     {
-      id: 'writing',
-      title: 'AI Handwritten Tutor',
-      subtitle: 'Writing Studio',
-      nativeTitle: currentLanguage === 'Tamil' ? 'எழுத்துப் பயிற்சி' : (currentLanguage === 'Telugu' ? 'వ్రాత సాధన' : 'लेखन अभ्यास'),
-      description: 'Write in your notebook! Snap a photo for instant AI stroke & letter analysis.',
-      icon: Edit3,
-      emoji: '✍️',
+      id: 'challenge',
+      title: 'Ammachi Challenge',
+      subtitle: 'Friend vs Friend',
+      nativeTitle: currentLanguage === 'Tamil' ? 'போட்டி' : (currentLanguage === 'Telugu' ? 'పోటీ' : 'चुनौती'),
+      description: 'Challenge a friend to a 5-minute AI language battle! Compete in real-time.',
+      icon: Swords,
+      emoji: '⚔️',
       color: 'from-amber-500 to-orange-500',
       bgColor: 'bg-amber-50 border-amber-300',
       textColor: 'text-amber-900',
-      link: '/writing',
-      score: profile?.writing_score || 0,
-      badgeText: 'PaddleOCR + Gemini'
+      link: '/challenge',
+      score: profile?.challenge_score || 0,
+      badgeText: 'Multiplayer + AI'
     },
     {
       id: 'voice',
@@ -79,6 +80,21 @@ export const DashboardPage = () => {
       link: '/culture',
       score: profile?.culture_score || 0,
       badgeText: 'LangGraph + Badges'
+    },
+    {
+      id: 'handwriting',
+      title: 'Handwriting Practice',
+      subtitle: 'Writing Notebook',
+      nativeTitle: currentLanguage === 'Tamil' ? 'கையெழுத்து' : (currentLanguage === 'Telugu' ? 'దస్తూరి' : 'हस्तलेख'),
+      description: 'Write letters on real paper, take a photo, and Ammachi will check them!',
+      icon: Edit3,
+      emoji: '✍️',
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'bg-blue-50 border-blue-300',
+      textColor: 'text-blue-900',
+      link: '/handwriting',
+      score: profile?.handwriting_score || 0,
+      badgeText: 'OCR Assessment'
     }
   ];
 

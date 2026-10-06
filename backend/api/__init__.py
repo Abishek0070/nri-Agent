@@ -1,3 +1,3 @@
-from api import auth, vision, voice, culture, user
+from api import auth, voice, culture, user, challenge, handwriting
 
-__all__ = ["auth", "vision", "voice", "culture", "user"]
+__all__ = ["auth", "voice", "culture", "user", "challenge", "handwriting"]

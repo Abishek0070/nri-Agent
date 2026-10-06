@@ -17,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger("ammachi.main")
 
 from database.connection import init_db
-from api import auth, vision, voice, culture, user
+from api import auth, voice, culture, user, challenge, handwriting
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -77,10 +77,12 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Include Routers
 app.include_router(auth.router, tags=["Authentication"])
-app.include_router(vision.router, prefix="/vision", tags=["Vision / Handwriting Tutor"])
+
 app.include_router(voice.router, prefix="/voice", tags=["Voice / Pronunciation Agent"])
+app.include_router(challenge.router, prefix="/challenges", tags=["Friend vs Friend Challenge"])
 app.include_router(culture.router, prefix="/culture", tags=["Culture / Discovery Agent"])
 app.include_router(user.router, prefix="/user", tags=["User Profile & Progress"])
+app.include_router(handwriting.router, prefix="/handwriting", tags=["Handwriting Assessment"])
 
 @app.get("/")
 def read_root():
@@ -88,7 +90,7 @@ def read_root():
         "app": "Ammachi AI Native Language Tutor",
         "status": "online",
         "version": "2.0.0",
-        "modules": ["Handwritten Tutor (PP-OCRv5 + Gemini)", "Voice Agent (Deepgram + ElevenLabs)", "Cultural Discovery (LangGraph)"]
+        "modules": ["Voice Agent (Deepgram + ElevenLabs)", "Cultural Discovery (LangGraph)"]
     }
 
 @app.get("/health")

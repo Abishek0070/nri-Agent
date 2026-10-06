@@ -1,5 +1,4 @@
 from schemas.auth import LoginRequest, SignupRequest, GoogleAuthRequest, LoginResponse, AuthConfigResponse
-from schemas.vision import VisionAnalyzeResponse, LetterItem
 from schemas.voice import VoiceAnalyzeResponse, TextToSpeechRequest
 from schemas.culture import CultureChatRequest, CultureChatResponse, MediaItem, FestivalInfo
 from schemas.user import UserProfileResponse, StampItem, ActivityItem, UpdateLanguageRequest
@@ -10,8 +9,6 @@ __all__ = [
     "GoogleAuthRequest",
     "LoginResponse",
     "AuthConfigResponse",
-    "VisionAnalyzeResponse",
-    "LetterItem",
     "VoiceAnalyzeResponse",
     "TextToSpeechRequest",
     "CultureChatRequest",

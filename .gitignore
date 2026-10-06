@@ -63,3 +63,4 @@ Thumbs.db
 *.wav
 temp/
 brain/
+.env

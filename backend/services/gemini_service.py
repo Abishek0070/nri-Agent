@@ -12,7 +12,7 @@ logger = logging.getLogger("ammachi.gemini")
 
 GEMINI_MODEL = os.getenv(
     "GEMINI_MODEL",
-    "gemini-3.6-flash"
+    "gemini-3.8-flash"
 )
 
 GEMINI_API_KEY = (

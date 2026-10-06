@@ -1,11 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { RotateCcw, Trash2, Sparkles, Eye, CheckCircle } from 'lucide-react';
+import { RotateCcw, Trash2, Sparkles, CheckCircle } from 'lucide-react';
 
 export const HandwritingCanvas = ({
   targetItem,
-  mode = 'trace', // 'trace', 'guided', 'free'
+  mode = 'guided', // 'guided', 'free'
   onEvaluate,
-  onShowMe,
   evaluating = false
 }) => {
   const canvasRef = useRef(null);
@@ -185,14 +184,7 @@ export const HandwritingCanvas = ({
       {/* Writing Box Canvas Container */}
       <div className="relative w-full aspect-[4/3] max-w-lg bg-amber-50/40 border-4 border-dashed border-amber-300 rounded-3xl overflow-hidden shadow-inner select-none touch-none">
         
-        {/* Trace Mode: Faint Target Guide Overlay */}
-        {mode === 'trace' && targetItem?.svg_guide && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-            <svg viewBox="0 0 100 100" className="w-4/5 h-4/5 text-amber-900 fill-none stroke-current stroke-[6] stroke-linecap-round stroke-linejoin-round">
-              <path d={targetItem.svg_guide} />
-            </svg>
-          </div>
-        )}
+
 
         {/* Guided Mode: Starting Point Pulsating Dot & Arrows */}
         {mode === 'guided' && targetItem?.starting_point && (
@@ -231,7 +223,7 @@ export const HandwritingCanvas = ({
 
         {/* Mode Watermark Badge */}
         <div className="absolute top-3 right-3 px-3 py-1 bg-amber-100/90 border border-amber-300 rounded-full text-[11px] font-extrabold text-amber-900 shadow-sm pointer-events-none uppercase tracking-wider">
-          {mode === 'trace' ? '✍️ Trace Mode' : mode === 'guided' ? '💡 Guided Mode' : '📝 Free Writing'}
+          {mode === 'guided' ? '💡 Guided Mode' : '📝 Free Writing'}
         </div>
       </div>
 
@@ -259,16 +251,7 @@ export const HandwritingCanvas = ({
             <span>Undo</span>
           </button>
 
-          {onShowMe && (
-            <button
-              type="button"
-              onClick={onShowMe}
-              className="py-2.5 px-3.5 rounded-2xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm"
-            >
-              <Eye className="w-4 h-4" />
-              <span>Show Me</span>
-            </button>
-          )}
+
         </div>
 
         <button

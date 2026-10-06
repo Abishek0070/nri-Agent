@@ -58,6 +58,66 @@ try:
             created_at = Column(DateTime, default=datetime.utcnow)
 
             user = relationship("User", back_populates="sessions")
+
+        # ====================================================
+        # AMMACHI CHALLENGE MODELS
+        # ====================================================
+
+        class Challenge(Base):
+            __tablename__ = "challenges"
+
+            id = Column(String(20), primary_key=True, index=True) # E.g., 'K7X92P'
+            language = Column(String(50), nullable=False)
+            difficulty = Column(String(50), nullable=False)
+            status = Column(String(20), default="WAITING") # WAITING, ACTIVE, COMPLETED
+            created_at = Column(DateTime, default=datetime.utcnow)
+            start_time = Column(DateTime, nullable=True)
+            end_time = Column(DateTime, nullable=True)
+
+            participants = relationship("ChallengeParticipant", back_populates="challenge", cascade="all, delete-orphan")
+            questions = relationship("ChallengeQuestion", back_populates="challenge", cascade="all, delete-orphan")
+            answers = relationship("ChallengeAnswer", back_populates="challenge", cascade="all, delete-orphan")
+
+        class ChallengeParticipant(Base):
+            __tablename__ = "challenge_participants"
+
+            id = Column(Integer, primary_key=True, index=True)
+            challenge_id = Column(String(20), ForeignKey("challenges.id", ondelete="CASCADE"), nullable=False)
+            nickname = Column(String(50), nullable=False)
+            score = Column(Integer, default=0)
+            joined_at = Column(DateTime, default=datetime.utcnow)
+
+            challenge = relationship("Challenge", back_populates="participants")
+            answers = relationship("ChallengeAnswer", back_populates="participant", cascade="all, delete-orphan")
+
+        class ChallengeQuestion(Base):
+            __tablename__ = "challenge_questions"
+
+            id = Column(Integer, primary_key=True, index=True)
+            challenge_id = Column(String(20), ForeignKey("challenges.id", ondelete="CASCADE"), nullable=False)
+            q_type = Column(String(50), nullable=False) # multiple_choice, translation, etc.
+            question_text = Column(String(500), nullable=False)
+            options = Column(JSON, nullable=True) # List of strings for MCQ
+            correct_answer = Column(String(255), nullable=False)
+            explanation = Column(String(500), nullable=True)
+            created_at = Column(DateTime, default=datetime.utcnow)
+
+            challenge = relationship("Challenge", back_populates="questions")
+
+        class ChallengeAnswer(Base):
+            __tablename__ = "challenge_answers"
+
+            id = Column(Integer, primary_key=True, index=True)
+            challenge_id = Column(String(20), ForeignKey("challenges.id", ondelete="CASCADE"), nullable=False)
+            participant_id = Column(Integer, ForeignKey("challenge_participants.id", ondelete="CASCADE"), nullable=False)
+            question_id = Column(Integer, ForeignKey("challenge_questions.id", ondelete="CASCADE"), nullable=False)
+            submitted_answer = Column(String(255), nullable=False)
+            is_correct = Column(Integer, default=0) # boolean stored as int for sqlite compat
+            points_awarded = Column(Integer, default=0)
+            created_at = Column(DateTime, default=datetime.utcnow)
+
+            challenge = relationship("Challenge", back_populates="answers")
+            participant = relationship("ChallengeParticipant", back_populates="answers")
     else:
         User = None
         LearningProgress = None

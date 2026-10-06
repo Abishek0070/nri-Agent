@@ -100,89 +100,7 @@ export const ProgressPage = () => {
         </div>
       </div>
 
-      {/* ✍️ Dedicated AI Handwriting Progress Dashboard */}
-      {writingStats && (
-        <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-2 border-amber-300 rounded-3xl p-6 shadow-sm space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <h3 className="text-xl font-black text-amber-950 flex items-center gap-2">
-                <Edit3 className="w-6 h-6 text-amber-700" />
-                <span>✍️ Handwriting Progress Dashboard</span>
-              </h3>
-              <p className="text-xs font-semibold text-stone-600">
-                Real-time evaluation data logged in PostgreSQL.
-              </p>
-            </div>
 
-            <Link
-              to="/writing"
-              className="btn-primary text-xs py-2 px-4 shadow-sm self-start sm:self-auto"
-            >
-              Practice Writing ✏️
-            </Link>
-          </div>
-
-          {/* Handwriting Stat Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-white p-3.5 rounded-2xl border border-amber-200 text-center">
-              <span className="text-2xl font-black text-amber-950">
-                {writingStats.practiced_count} / 30
-              </span>
-              <span className="text-[11px] font-bold text-stone-500 block">Characters Learned</span>
-            </div>
-
-            <div className="bg-white p-3.5 rounded-2xl border border-amber-200 text-center">
-              <span className="text-2xl font-black text-emerald-700">
-                {writingStats.avg_score}%
-              </span>
-              <span className="text-[11px] font-bold text-stone-500 block">Average Score</span>
-            </div>
-
-            <div className="bg-white p-3.5 rounded-2xl border border-amber-200 text-center">
-              <span className="text-2xl font-black text-purple-700">
-                {writingStats.best_character || 'அ'} ({writingStats.best_character_score}%)
-              </span>
-              <span className="text-[11px] font-bold text-stone-500 block">Best Character</span>
-            </div>
-
-            <div className="bg-white p-3.5 rounded-2xl border border-amber-200 text-center">
-              <span className="text-2xl font-black text-blue-700 flex items-center justify-center gap-1">
-                <TrendingUp className="w-4 h-4 text-blue-600" />
-                <span>+{writingStats.improvement_pct}%</span>
-              </span>
-              <span className="text-[11px] font-bold text-stone-500 block">Improvement Trend</span>
-            </div>
-          </div>
-
-          {/* Weak Characters Recommendation Section */}
-          {writingStats.weak_characters && writingStats.weak_characters.length > 0 && (
-            <div className="bg-white border border-amber-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-orange-100 text-orange-700">
-                  <AlertTriangle className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-sm font-black text-amber-950 block">Needs Practice:</span>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {writingStats.weak_characters.map((w, idx) => (
-                      <span key={idx} className="px-2.5 py-0.5 rounded-lg bg-orange-50 border border-orange-200 text-xs font-extrabold text-orange-950">
-                        {w.char} ({w.avg_score}%)
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <Link
-                to="/writing"
-                className="py-2 px-3.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold text-xs shadow-sm transition-all whitespace-nowrap"
-              >
-                Practice Weak Characters 🔄
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Module Breakdown Bars */}
       <div className="bg-white border-2 border-amber-200 rounded-3xl p-6 shadow-sm space-y-4">
@@ -192,19 +110,7 @@ export const ProgressPage = () => {
         </h3>
 
         <div className="space-y-3">
-          {/* Writing */}
-          <div>
-            <div className="flex justify-between text-xs font-bold text-stone-700 mb-1">
-              <span className="flex items-center gap-1">✍️ AI Handwritten Tutor</span>
-              <span>{writingStats?.avg_score || profile?.writing_score || 0}%</span>
-            </div>
-            <div className="w-full h-3 bg-amber-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-500"
-                style={{ width: `${writingStats?.avg_score || profile?.writing_score || 0}%` }}
-              />
-            </div>
-          </div>
+
 
           {/* Speaking */}
           <div>

@@ -19,11 +19,6 @@ class LoginResponse(BaseModel):
     token: Optional[str] = None
     username: Optional[str] = None
 
-# Vision Models
-class VisionResponse(BaseModel):
-    detected_text: str
-    feedback: str
-    is_correct: bool
 
 # Story Models
 # Story Models Removed
