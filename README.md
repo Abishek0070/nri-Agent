@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Ammachi Logo](frontend/public/pwa-192x192.png)
+<img src="frontend/public/logo/logo.png" alt="Ammachi Logo" width="200" />
 
 **Your Personal AI Native Language Companion & Cultural Storyteller**
 
@@ -10,7 +10,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React 18](https://img.shields.io/badge/React-Vite%20PWA-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Psycopg3-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org)
-[![PaddleOCR](https://img.shields.io/badge/PaddleOCR-PP--OCRv5-FF6F00?style=for-the-badge)](https://github.com/PaddlePaddle/PaddleOCR)
+[![Bodhan AI](https://img.shields.io/badge/Bodhan%20IndicOCR-AI%20Vision-FF6F00?style=for-the-badge)](https://bodhan.ai)
 [![Gemini AI](https://img.shields.io/badge/Google%20Gemini-Multimodal-4285F4?style=for-the-badge&logo=google)](https://deepmind.google/technologies/gemini/)
 
 </div>
@@ -23,15 +23,15 @@
 
 The platform combines warm, motherly AI mentorship with cutting-edge vision, speech, and agentic workflows across three core modules:
 
-1. ✍️ **AI Handwritten Tutor (PaddleOCR PP-OCRv5 + Gemini Vision)**: Write in a real notebook, snap a photo or use live camera capture, and receive instant stroke, curve, and pulli/dot analysis from Ammachi.
+1. ✍️ **AI Handwritten Tutor (Bodhan IndicOCR + Computer Vision)**: Write in a real notebook, snap a photo, and our dedicated preprocessing pipeline (CLAHE, Adaptive Thresholding, EXIF correction) prepares the image for Bodhan's IndicOCR engine. It strictly validates against supported characters to evaluate handwriting accuracy.
 2. 🎤 **AI Voice Agent (Deepgram STT + Patience Denoising Agent + ElevenLabs TTS)**: Practice speaking and conversational fluency with an adaptive, stutter-tolerant grandmother persona that recasts mistakes gently.
-3. 🪔 **Cultural Discovery & Gamification (LangGraph Agent + RAG + Digital Passport)**: Explore Indian festivals (Pongal, Diwali, Ugadi, Onam, Karthigai Deepam), folktales, solve quiz challenges, and collect digital Cultural Stamps.
+3. 🏆 **Challenge-a-Friend & Cultural Gamification**: A robust 10-question challenge module allowing kids to compete in language and cultural knowledge, managed by an intelligent multi-agent AI system. Explore Indian festivals, folktales, solve quiz challenges, and collect digital Cultural Stamps.
 
 ---
 
 ## 🛠️ Upgraded Architecture & Tech Stack
 
-```
+```text
                                ┌────────────────────────────────┐
                                │  Ammachi React 18 Vite PWA     │
                                │  (Tailwind CSS + WebApp Shell) │
@@ -46,9 +46,9 @@ The platform combines warm, motherly AI mentorship with cutting-edge vision, spe
             ▼                          ▼               ▼                          ▼
  ┌──────────────────────┐   ┌────────────────────┐   ┌────────────────────┐   ┌──────────────────────────┐
  │    Module 1: Vision  │   │  Module 2: Voice   │   │ Module 3: Culture  │   │  Database & Persistence  │
- │  PaddleOCR PP-OCRv5  │   │  Deepgram Nova-2   │   │  LangGraph State   │   │  PostgreSQL (Psycopg 3)  │
- │  Gemini Multimodal   │   │  Patience Agent    │   │  Festival Story RAG│   │  SQLAlchemy 2.0 ORM      │
- │  Stroke Evaluation   │   │  ElevenLabs TTS    │   │  Gamified Badges   │   │  (SQLite local fallback) │
+ │  OpenCV Preprocessor │   │  Deepgram Nova-2   │   │  10-Q Challenges   │   │  PostgreSQL (Psycopg 3)  │
+ │  Bodhan IndicOCR     │   │  Patience Agent    │   │  Festival Story RAG│   │  SQLAlchemy 2.0 ORM      │
+ │  Subset Validation   │   │  ElevenLabs TTS    │   │  Gamified Badges   │   │  (SQLite local fallback) │
  └──────────────────────┘   └────────────────────┘   └────────────────────┘   └──────────────────────────┘
 ```
 
@@ -56,7 +56,7 @@ The platform combines warm, motherly AI mentorship with cutting-edge vision, spe
 - **Frontend PWA**: React 18, Vite 5, Tailwind CSS, `vite-plugin-pwa` (Service Worker, Workbox static asset caching, Web App Manifest, Install prompts), Lucide Icons, Canvas Confetti.
 - **Backend API**: FastAPI, Pydantic v2, Python 3.11+, JWT security, CORS middleware.
 - **AI / Agent Layer**: Google Gemini (`gemini-1.5-flash` / `gemini-2.0-flash`), LangChain, LangGraph orchestrator, Groq Cloud fallback.
-- **Vision / OCR**: PaddleOCR (PP-OCRv5 multilingual Indian script support) + OpenCV preprocessing (CLAHE, bilateral filtering).
+- **Vision / OCR**: Bodhan IndicOCR + custom OpenCV preprocessing pipeline (CLAHE, bilateral filtering, Gaussian adaptive thresholding, intelligent EXIF orientation handling).
 - **Speech**: Deepgram STT (`nova-2`), ElevenLabs emotive Grandmother TTS (`eleven_multilingual_v2`), gTTS regional fallback.
 - **Database**: PostgreSQL with SQLAlchemy 2.0 and Psycopg 3 driver (with automatic zero-config SQLite development fallback).
 
@@ -70,35 +70,39 @@ AI-Native-Language-Tutor-main/
 ├── backend/
 │   ├── api/
 │   │   ├── auth.py              # Authentication (JWT, signup, login, Google OAuth, /me)
-│   │   ├── vision.py            # Module 1: Handwriting analysis & letters API
+│   │   ├── handwriting.py       # Module 1: Handwriting analysis & letters API
+│   │   ├── challenge.py         # Module 3: Challenge-a-friend WebSocket and REST endpoints
 │   │   ├── voice.py             # Module 2: STT, Patience Agent, & ElevenLabs TTS
-│   │   ├── culture.py           # Module 3: Cultural discovery & LangGraph chat
 │   │   └── user.py              # User progress, stats, and passport stamps
 │   │
 │   ├── database/
 │   │   ├── connection.py         # SQLAlchemy engine, Psycopg 3, & SQLite fallback
 │   │   ├── models.py             # User, LearningProgress, CulturalStamp, Session
+│   │   ├── handwriting_models.py # Handwriting models (Letters, Attempts)
 │   │   └── crud.py               # Data access layer & streak/progress metrics
 │   │
 │   ├── services/
-│   │   ├── paddleocr_service.py  # Multilingual PP-OCRv5 character recognition
-│   │   ├── gemini_service.py     # Gemini Multimodal Vision & LLM completion
-│   │   ├── voice_service.py      # Deepgram STT & ElevenLabs/gTTS streaming
-│   │   └── culture_service.py    # Cultural dataset, festivals RAG & media search
+│   │   ├── bodhan_ocr.py             # Bodhan IndicOCR integration
+│   │   ├── handwriting_preprocessor.py # OpenCV pipeline for shadows, EXIF, and cropping
+│   │   ├── handwriting_service.py    # Multi-pass OCR validation and language subsets
+│   │   ├── challenge_service.py      # Core challenge logic (10-question fixed sets)
+│   │   ├── challenge_ai.py           # Gemini prompt-generation for challenges
+│   │   ├── gemini_service.py         # Gemini Multimodal Vision & LLM completion
+│   │   └── voice_service.py          # Deepgram STT & ElevenLabs/gTTS streaming
 │   │
-│   ├── agents/
-│   │   ├── patience_agent.py     # Speech denoiser & subtle recasting assistant
-│   │   └── langgraph_culture.py  # LangGraph state workflow for cultural mentoring
+│   ├── tests/
+│   │   └── test_handwriting.py  # Unit tests for the Handwriting CV/OCR pipeline
 │   │
 │   ├── schemas/                  # Pydantic v2 schemas for all APIs
 │   ├── main.py                  # FastAPI application entry point
 │   └── requirements.txt         # Upgraded Python dependencies
 │
 ├── frontend/
-│   ├── public/                  # App icons, favicon, PWA manifest icons
+│   ├── public/                  
+│   │   └── logo/                # Ammachi Custom Logo
 │   ├── src/
 │   │   ├── components/          # Mascots, Speech bubbles, Navbars, Audio players
-│   │   ├── pages/               # Auth, Dashboard, Writing, Speaking, Culture, Progress, Profile
+│   │   ├── pages/               # Auth, Dashboard, Handwriting, Challenge, Speaking, Progress
 │   │   ├── context/             # AuthContext (JWT) & LanguageContext (Tamil/Telugu/Hindi)
 │   │   ├── services/            # Axios API clients
 │   │   ├── App.jsx              # React Router setup
@@ -137,6 +141,10 @@ Configure your API keys in `backend/.env`:
 # PostgreSQL (Optional - falls back to SQLite if omitted)
 DATABASE_URL=postgresql+psycopg://username:password@localhost:5432/ammachi_db
 
+# Bodhan IndicOCR API
+BODHAN_API_KEY=your_bodhan_api_key_here
+BODHAN_OCR_ENDPOINT=https://api.bodhan.ai/v1/chat/completions
+
 # Google Gemini AI
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-1.5-flash
@@ -167,19 +175,25 @@ Navigate to `backend/` and install dependencies:
 
 ```bash
 cd backend
+python -m venv venv
+.\venv\Scripts\activate  # On macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
+```
+
+Seed the handwriting database with supported letters:
+```bash
+python seed_letters.py
 ```
 
 Start the FastAPI backend server:
 
 ```bash
-uvicorn main:app --reload --port 8000
+python -m uvicorn main:app --reload --port 8000
 ```
 
 The API will be live at:
 - **API Root**: `http://localhost:8000`
 - **Interactive OpenAPI Docs (Swagger)**: `http://localhost:8000/docs`
-- **Health Check**: `http://localhost:8000/health`
 
 ---
 
@@ -224,15 +238,16 @@ Open your browser at:
 
 ## 🧪 Testing the 3 Core Modules
 
-### ✍️ Module 1: AI Handwritten Tutor
-1. Navigate to `/writing`.
-2. Choose your language (Tamil / Telugu) and select a character (e.g. `அ` or `అ`).
+### ✍️ Module 1: AI Handwriting Tutor
+1. Navigate to `/handwriting` from the Dashboard.
+2. Choose your language (Tamil, Telugu, Hindi, Malayalam) and select a target character.
 3. Write the character in your physical notebook.
-4. Click **"Open Camera"** to take a snapshot, or click **"Upload File"** to pick a picture.
-5. Click **"Analyze with Ammachi"**:
-   - PaddleOCR extracts the text.
-   - Google Gemini evaluates your stroke shape and pulli/dots.
-   - Ammachi speaks her motherly feedback aloud with audio!
+4. Click **"Take Photo & Check"** to snap a photo or upload an image.
+5. **How it works:**
+   - The backend runs a light Computer Vision preprocessor to normalize EXIF orientation and resize.
+   - It makes a call to Bodhan IndicOCR.
+   - If Bodhan recognizes an invalid character (e.g. shadow artifact), a heavy CV pass (CLAHE + Thresholding) is run to suppress notebook lines and shadows before re-running OCR.
+   - The final detected character is compared against the actual target character, and you are provided deterministic feedback.
 
 ### 🎤 Module 2: AI Voice Agent
 1. Navigate to `/speaking`.
@@ -243,11 +258,13 @@ Open your browser at:
    - The Patience Agent denoises any pauses or repetitions.
    - Ammachi replies in a warm voice (ElevenLabs / gTTS) and awards fluency points.
 
-### 🪔 Module 3: Cultural Discovery & Gamification
-1. Navigate to `/culture`.
-2. Select any festival (e.g., **Pongal**, **Diwali**, **Ugadi**, or **Onam**).
-3. The LangGraph agent retrieves cultural folklore, shows colorful celebration snapshots, and asks a quiz challenge.
-4. Type your answer to earn points and unlock digital stamps in your **Cultural Passport** with celebratory confetti animations!
+### 🏆 Module 3: Challenge-a-Friend
+1. Navigate to `/challenge`.
+2. Enter your friend's username to start a new Challenge match.
+3. **The 10-Question Gamified Loop:**
+   - The Gemini-powered AI generates 5 Language questions (alphabet, words) and 5 Cultural questions (festivals, traditions, states).
+   - Real-time WebSockets sync the progress of both players.
+   - At the end of the 10 questions, the winner is declared!
 
 ---
 
