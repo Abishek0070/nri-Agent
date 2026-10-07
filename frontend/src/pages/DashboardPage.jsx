@@ -44,6 +44,7 @@ export const DashboardPage = () => {
       description: 'Challenge a friend to a 5-minute AI language battle! Compete in real-time.',
       icon: Swords,
       emoji: '⚔️',
+      imagePath: '/icons/challenge-icon.png',
       color: 'from-amber-500 to-orange-500',
       bgColor: 'bg-amber-50 border-amber-300',
       textColor: 'text-amber-900',
@@ -59,6 +60,7 @@ export const DashboardPage = () => {
       description: 'Speak and practice with patient AI Ammachi. Learn native accents and conversational fluency.',
       icon: Mic,
       emoji: '🎤',
+      imagePath: '/icons/voice-icon.png',
       color: 'from-emerald-500 to-teal-500',
       bgColor: 'bg-emerald-50 border-emerald-300',
       textColor: 'text-emerald-900',
@@ -74,6 +76,7 @@ export const DashboardPage = () => {
       description: 'Explore Indian festivals, moral folktales, solve quiz challenges, and collect stamps.',
       icon: Sparkles,
       emoji: '🪔',
+      imagePath: '/icons/culture-icon.png',
       color: 'from-purple-500 to-pink-500',
       bgColor: 'bg-purple-50 border-purple-300',
       textColor: 'text-purple-900',
@@ -89,6 +92,7 @@ export const DashboardPage = () => {
       description: 'Write letters on real paper, take a photo, and Ammachi will check them!',
       icon: Edit3,
       emoji: '✍️',
+      imagePath: '/icons/handwriting-icon.png',
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'bg-blue-50 border-blue-300',
       textColor: 'text-blue-900',
@@ -167,19 +171,23 @@ export const DashboardPage = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {modules.map((mod) => (
             <Link
               key={mod.id}
               to={mod.link}
               className={`module-card ${mod.bgColor} p-6 flex flex-col justify-between group`}
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-4xl p-2 rounded-2xl bg-white/80 shadow-sm inline-block">
-                    {mod.emoji}
-                  </span>
-                  <span className="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-white/90 text-stone-700 shadow-sm">
+              <div className="space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="p-2 rounded-2xl bg-white/80 shadow-sm inline-block w-16 h-16 shrink-0 flex items-center justify-center transform group-hover:scale-105 transition-transform">
+                    {mod.imagePath ? (
+                      <img src={mod.imagePath} alt={mod.title} className="w-full h-full object-contain drop-shadow-sm" />
+                    ) : (
+                      <span className="text-4xl">{mod.emoji}</span>
+                    )}
+                  </div>
+                  <span className="text-[10px] font-extrabold px-2 py-1 rounded-full bg-white/90 text-stone-700 shadow-sm text-center max-w-[80px] leading-tight flex-shrink-0">
                     {mod.badgeText}
                   </span>
                 </div>
