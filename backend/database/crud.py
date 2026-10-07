@@ -306,6 +306,7 @@ def get_user_progress_summary(db, user):
 
                     return {
                         "username": u.username,
+                        "avatar_url": getattr(u, "avatar_url", None),
                         "points": u.points or 0,
                         "current_language": u.current_language or "Tamil",
                         "streak": max(1, 1 if (u.points or 0) > 0 else 0),
@@ -354,14 +355,16 @@ def get_user_progress_summary(db, user):
         for r in rows[:10]
     ]
 
-    c.execute("SELECT points, current_language FROM users WHERE id=?", (user.id,))
+    c.execute("SELECT points, current_language, avatar_url FROM users WHERE id=?", (user.id,))
     u_row = c.fetchone()
     points = u_row[0] if u_row else 0
     lang = u_row[1] if u_row else "Tamil"
+    avatar_url = u_row[2] if u_row and len(u_row) > 2 else None
     conn.close()
 
     return {
         "username": user.username,
+        "avatar_url": avatar_url,
         "points": points,
         "current_language": lang,
         "streak": max(1, 1 if points > 0 else 0),
@@ -374,6 +377,28 @@ def get_user_progress_summary(db, user):
         "stamps": stamps,
         "recent_activities": recent
     }
+
+def update_user_avatar(db, user_id: int, avatar_url: str):
+    if hasattr(db, "query") and db is not None:
+        try:
+            from database.models import User
+            if User:
+                user = db.query(User).filter(User.id == user_id).first()
+                if user:
+                    user.avatar_url = avatar_url
+                    db.commit()
+                    db.refresh(user)
+                    return user
+        except Exception:
+            db.rollback()
+
+    if os.path.exists(DB_FILE):
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("UPDATE users SET avatar_url=? WHERE id=?", (avatar_url, user_id))
+        conn.commit()
+        conn.close()
+    return get_user_by_username(db, "student")
 
 def log_learning_session(db, user_id: int, module: str, score: int, session_metadata: Dict[str, Any]):
     if hasattr(db, "add") and db is not None:

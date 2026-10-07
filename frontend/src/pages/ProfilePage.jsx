@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Globe, Award, Star, Flame, LogOut, ArrowLeft, ShieldCheck, Edit3, Mic, Sparkles, BookOpen, ChevronRight, Trophy } from 'lucide-react';
+import { Globe, Award, Star, Flame, LogOut, ArrowLeft, ShieldCheck, Edit3, Mic, Sparkles, BookOpen, ChevronRight, Trophy, Camera } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { AmmachiMascot } from '../components/common/AmmachiMascot';
 import { userService } from '../services/userService';
+import { API_BASE_URL } from '../services/api';
 
 export const ProfilePage = () => {
   const { user, logout } = useAuth();
   const { currentLanguage, setLanguage, languages, activeLangMeta } = useLanguage();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = React.useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +33,22 @@ export const ProfilePage = () => {
   const handleLogout = () => {
     logout();
     navigate('/auth');
+  };
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploadingAvatar(true);
+      const res = await userService.uploadAvatar(file);
+      setProfile(prev => ({ ...prev, avatar_url: res.avatar_url }));
+    } catch (err) {
+      console.error("Avatar upload failed", err);
+      alert("Failed to upload avatar.");
+    } finally {
+      setUploadingAvatar(false);
+    }
   };
 
   const username = user?.username || 'Student';
@@ -71,7 +90,33 @@ export const ProfilePage = () => {
 
       {/* 1. PROFILE HEADER */}
       <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
-        <AmmachiMascot size="lg" className="ring-4 ring-amber-300 shrink-0 bg-white" />
+        <div className="relative shrink-0 group">
+          {profile?.avatar_url ? (
+            <img 
+              src={`${API_BASE_URL}${profile.avatar_url}`}
+              alt="Profile" 
+              className="w-32 h-32 rounded-full ring-4 ring-amber-300 object-cover bg-white"
+            />
+          ) : (
+            <AmmachiMascot size="lg" className="ring-4 ring-amber-300 shrink-0 bg-white" />
+          )}
+          
+          <button 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingAvatar}
+            className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-white p-2.5 rounded-full shadow-lg transition-transform hover:scale-105 disabled:opacity-50"
+            title="Upload Profile Picture"
+          >
+            <Camera className="w-4 h-4" />
+          </button>
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleAvatarUpload} 
+            accept="image/*" 
+            className="hidden" 
+          />
+        </div>
         <div className="w-full text-center sm:text-left space-y-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-black text-amber-950">
@@ -111,11 +156,11 @@ export const ProfilePage = () => {
         </div>
       </div>
 
-      {/* 2. MY LEARNING */}
+      {/* 2. LANGUAGE JOURNEY */}
       <div className="bg-white border-2 border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
         <div className="flex items-center gap-2 mb-6">
-          <BookOpen className="w-6 h-6 text-emerald-600" />
-          <h3 className="text-xl font-black text-stone-900">My Learning</h3>
+          <span className="text-2xl">🗺️</span>
+          <h3 className="text-xl font-black text-stone-900">Language Journey</h3>
         </div>
         
         <div className="space-y-5">
@@ -153,21 +198,61 @@ export const ProfilePage = () => {
           </div>
         </div>
 
-        {overallProgress === 0 ? (
+        {overallProgress === 0 && (
           <p className="text-sm font-medium text-stone-500 text-center mt-6">
             Start learning to track your progress.
           </p>
-        ) : null}
+        )}
+      </div>
 
+      {/* 3. CONTINUE LEARNING */}
+      <div className="bg-amber-100 border-2 border-amber-300 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col items-center text-center">
+        <h3 className="text-lg font-black text-amber-950 mb-2 flex items-center gap-2">
+          <BookOpen className="w-5 h-5 text-amber-700" /> Continue Learning
+        </h3>
+        <p className="text-sm font-bold text-amber-900 mb-5">
+          Ready for your next {currentLanguage} lesson?
+        </p>
         <button 
           onClick={() => navigate('/')}
-          className="mt-6 w-full py-3.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-colors"
+          className="w-full sm:w-auto px-8 py-3.5 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-transform hover:scale-105 shadow-md"
         >
-          Continue Learning <ChevronRight className="w-4 h-4" />
+          Continue <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 
-      {/* 3. LANGUAGE SWITCHER */}
+      {/* 4. ACHIEVEMENTS */}
+      <div className="bg-white border-2 border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-black text-stone-900 flex items-center gap-2">
+            <Trophy className="w-6 h-6 text-orange-500" />
+            <span>Achievements</span>
+          </h3>
+          <button className="text-xs font-bold text-stone-500 hover:text-stone-800">
+            View all &rarr;
+          </button>
+        </div>
+
+        <div className="flex overflow-x-auto gap-4 pb-2 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {achievements.map((ach) => (
+            <div 
+              key={ach.id} 
+              className={`shrink-0 w-28 p-4 rounded-2xl border-2 flex flex-col items-center justify-center text-center gap-2 snap-start ${
+                ach.locked 
+                  ? 'bg-stone-50 border-stone-100 opacity-60 grayscale' 
+                  : 'bg-amber-50 border-amber-200 shadow-sm'
+              }`}
+            >
+              <span className="text-3xl">{ach.icon}</span>
+              <span className="text-[11px] font-bold text-stone-700 leading-tight">
+                {ach.title}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. LANGUAGE SWITCHER */}
       <div className="bg-white border-2 border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
         <div className="mb-6">
           <h3 className="text-xl font-black text-stone-900 flex items-center gap-2 mb-1">
@@ -211,38 +296,7 @@ export const ProfilePage = () => {
         </div>
       </div>
 
-      {/* 4. ACHIEVEMENTS */}
-      <div className="bg-white border-2 border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-black text-stone-900 flex items-center gap-2">
-            <Trophy className="w-6 h-6 text-orange-500" />
-            <span>Achievements</span>
-          </h3>
-          <button className="text-xs font-bold text-stone-500 hover:text-stone-800">
-            View all &rarr;
-          </button>
-        </div>
-
-        <div className="flex overflow-x-auto gap-4 pb-2 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          {achievements.map((ach) => (
-            <div 
-              key={ach.id} 
-              className={`shrink-0 w-28 p-4 rounded-2xl border-2 flex flex-col items-center justify-center text-center gap-2 snap-start ${
-                ach.locked 
-                  ? 'bg-stone-50 border-stone-100 opacity-60 grayscale' 
-                  : 'bg-amber-50 border-amber-200 shadow-sm'
-              }`}
-            >
-              <span className="text-3xl">{ach.icon}</span>
-              <span className="text-[11px] font-bold text-stone-700 leading-tight">
-                {ach.title}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 5. ACCOUNT & SECURITY */}
+      {/* 6. ACCOUNT & SECURITY */}
       <div className="bg-stone-50 border-2 border-stone-200 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="w-10 h-10 shrink-0 rounded-full bg-stone-200/70 flex items-center justify-center text-stone-600">

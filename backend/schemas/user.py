@@ -16,6 +16,7 @@ class ActivityItem(BaseModel):
 
 class UserProfileResponse(BaseModel):
     username: str
+    avatar_url: Optional[str] = None
     points: int
     current_language: str
     streak: int
