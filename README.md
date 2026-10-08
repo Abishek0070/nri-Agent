@@ -26,6 +26,7 @@ The platform combines warm, motherly AI mentorship with cutting-edge vision, spe
 1. ✍️ **AI Handwritten Tutor (Bodhan IndicOCR + Computer Vision)**: Write in a real notebook, snap a photo, and our dedicated preprocessing pipeline (CLAHE, Adaptive Thresholding, EXIF correction) prepares the image for Bodhan's IndicOCR engine. It strictly validates against supported characters to evaluate handwriting accuracy.
 2. 🎤 **AI Voice Agent (Deepgram STT + Patience Denoising Agent + ElevenLabs TTS)**: Practice speaking and conversational fluency with an adaptive, stutter-tolerant grandmother persona that recasts mistakes gently.
 3. 🏆 **Challenge-a-Friend & Cultural Gamification**: A robust 10-question challenge module allowing kids to compete in language and cultural knowledge, managed by an intelligent multi-agent AI system. Explore Indian festivals, folktales, solve quiz challenges, and collect digital Cultural Stamps.
+4. 👦 **Immersive Child Learning Profile**: A completely redesigned, visually rich Profile hub. Children can set custom profile avatars, view their "Language Journey" progress across multiple modules, unlock data-driven achievements, and choose their active native language gracefully.
 
 ---
 
@@ -53,9 +54,9 @@ The platform combines warm, motherly AI mentorship with cutting-edge vision, spe
 ```
 
 ### Technology Highlights
-- **Frontend PWA**: React 18, Vite 5, Tailwind CSS, `vite-plugin-pwa` (Service Worker, Workbox static asset caching, Web App Manifest, Install prompts), Lucide Icons, Canvas Confetti.
-- **Backend API**: FastAPI, Pydantic v2, Python 3.11+, JWT security, CORS middleware.
-- **AI / Agent Layer**: Google Gemini (`gemini-1.5-flash` / `gemini-2.0-flash`), LangChain, LangGraph orchestrator, Groq Cloud fallback.
+- **Frontend PWA**: React 18, Vite 5, Tailwind CSS, `vite-plugin-pwa` (Service Worker, Workbox static asset caching, Web App Manifest, Install prompts), Lucide Icons, Canvas Confetti. Uses custom module icons for a premium feel.
+- **Backend API**: FastAPI, Pydantic v2, Python 3.11+, JWT security, CORS middleware, multipart/form-data file uploads (Profile Avatars via `StaticFiles`).
+- **AI / Agent Layer**: Google Gemini (`gemini-1.5-flash` / `gemini-3.8-flash`), LangChain, LangGraph orchestrator, Groq Cloud fallback.
 - **Vision / OCR**: Bodhan IndicOCR + custom OpenCV preprocessing pipeline (CLAHE, bilateral filtering, Gaussian adaptive thresholding, intelligent EXIF orientation handling).
 - **Speech**: Deepgram STT (`nova-2`), ElevenLabs emotive Grandmother TTS (`eleven_multilingual_v2`), gTTS regional fallback.
 - **Database**: PostgreSQL with SQLAlchemy 2.0 and Psycopg 3 driver (with automatic zero-config SQLite development fallback).
@@ -99,7 +100,8 @@ AI-Native-Language-Tutor-main/
 │
 ├── frontend/
 │   ├── public/                  
-│   │   └── logo/                # Ammachi Custom Logo
+│   │   ├── logo/                # Ammachi Custom Logo
+│   │   └── icons/               # Custom Dashboard Module Icons
 │   ├── src/
 │   │   ├── components/          # Mascots, Speech bubbles, Navbars, Audio players
 │   │   ├── pages/               # Auth, Dashboard, Handwriting, Challenge, Speaking, Progress
@@ -236,7 +238,7 @@ Open your browser at:
 
 ---
 
-## 🧪 Testing the 3 Core Modules
+## 🧪 Testing the 4 Core Modules
 
 ### ✍️ Module 1: AI Handwriting Tutor
 1. Navigate to `/handwriting` from the Dashboard.
@@ -265,6 +267,21 @@ Open your browser at:
    - The Gemini-powered AI generates 5 Language questions (alphabet, words) and 5 Cultural questions (festivals, traditions, states).
    - Real-time WebSockets sync the progress of both players.
    - At the end of the 10 questions, the winner is declared!
+
+### 🪔 Module 4: Cultural Discovery
+1. Navigate to `/culture` from the Dashboard.
+2. Select an engaging cultural topic from the carousel (e.g., Diwali, Pongal, Ramayana, Onam).
+3. **Interactive Storytelling:**
+   - Ammachi guides the child through a rich, contextual story powered by Google Gemini and a LangGraph workflow.
+   - After the story, a dynamic quiz tests reading comprehension and cultural knowledge.
+4. **Collect Stamps:**
+   - Successfully answering the quiz awards a unique, thematic "Cultural Stamp" (e.g., a Diya or a Kathakali face) to the child's passport, motivating further exploration!
+
+### 👦 Immersive Child Profile
+1. Navigate to your Profile by clicking your Avatar on the top right.
+2. You will see your new **Language Journey** progress bars accurately reading your stats from the database.
+3. Click the Camera icon overlaid on the Ammachi Mascot to upload your own **Profile Avatar** (it uses `multipart/form-data` to safely save it locally on the backend!).
+4. Seamlessly switch your target language between Tamil, Telugu, Hindi, and Malayalam using the beautifully designed, touch-friendly language cards.
 
 ---
 
